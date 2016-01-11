@@ -1,5 +1,7 @@
 // Repopulate form with previously selected options
 function restoreOptions() {
+	$("#aspect_ratio_h").prop("value", localStorage.getItem("aspect_ratio_h"));
+	$("#aspect_ratio_v").prop("value", localStorage.getItem("aspect_ratio_v"));
 	$("#background_color").prop("value", localStorage.getItem("background_color"));
 	$("#custom_icon_data").prop("value", localStorage.getItem("custom_icon_data"));
 	$("#center_vertically").prop("checked", localStorage.getItem("center_vertically") === "true");
@@ -20,6 +22,8 @@ function restoreOptions() {
 
 // Write selected options back to local storage
 function saveOptions() {
+	localStorage.setItem("aspect_ratio_h", $("#aspect_ratio_h").prop("value"));
+	localStorage.setItem("aspect_ratio_v", $("#aspect_ratio_v").prop("value"));
 	localStorage.setItem("background_color", $("#background_color").prop("value"));
 	localStorage.setItem("custom_icon_data", JSON.stringify(JSON.parse($("#custom_icon_data").prop("value"))));
 	localStorage.setItem("center_vertically", $("#center_vertically").prop("checked"));
@@ -49,11 +53,56 @@ document.addEventListener("DOMContentLoaded", function() {
 	restoreOptions();
 
 	$("#save").on("click", function() {
+		var error = false;
+		function error(text, elementToFocus) {
+			alert(text);
+			error = true;
+			$(elementToFocus).focus();
+		}
 		try { // Just validate and make sure everything is good to save
 			JSON.parse($("#custom_icon_data").prop("value"));
-			saveOptions();
 		} catch (e) {
-			alert("The JSON you entered is not valid, try again.\nThe error message was: " + e);
+			error("The JSON you entered is not valid, try again.\nThe error message was: " + e, "#custom_icon_data");
+			return;
+		}
+
+		//validate aspect ratio (that it's numeric and not out of this world)
+		var aspectRH = parseFloat($("#aspect_ratio_h").prop("value"));
+		if(isNaN(aspectRH)) {
+			error("The aspect ratio you entered (first value) is not valid, try again.", "#aspect_ratio_h");
+			return;
+		}
+
+		var aspectRV = parseFloat($("#aspect_ratio_v").prop("value"));
+		if(isNaN(aspectRH)) {
+			error("The aspect ratio you entered (second value) is not valid, try again.", "#aspect_ratio_v");
+			return;
+		}
+
+		//clean up input, since '123a' is evaluated to 123, validation passes, but it certainly is NOT 123a, but 123
+		$("#aspect_ratio_h").prop("value", aspectRH);
+		$("#aspect_ratio_v").prop("value", aspectRV);
+
+		if(aspectRH==0) {
+			error("The aspect ratio you entered (first value) is zero.\nPlease enter a valid ratio (ex. 400 by 300).", "#aspect_ratio_h");
+			return;
+		}
+		if(aspectRV==0) {
+			error("The aspect ratio you entered (second value) is zero.\nPlease enter a valid ratio (ex. 400 by 300).", "#aspect_ratio_v");
+			return;
+		}
+		var aspectR = aspectRH/aspectRV;
+		if(aspectR<0.2) {
+			error("The aspect ratio you entered is less than 1 by 5.\nPlease enter a ratio that's closer to a square (ex. 400 by 300)", "#aspect_ratio_h");
+			return;
+		}
+		if(aspectR>5) {
+			error("The aspect ratio you entered is larger than 5 by 1.\nPlease enter a ratio that's closer to a square (ex. 400 by 300)", "#aspect_ratio_h");
+			return;
+		}
+
+		if(!error) {
+			saveOptions();
 		}
 	});
 	$("#cancel").on("click", function() {
