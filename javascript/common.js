@@ -53,6 +53,8 @@ function getStartingFolder() {
 // Create default localStorage values if they don't already exist
 function createDefaults() {
 	var default_values = {
+		aspect_ratio_h: 4,
+		aspect_ratio_v: 3,
 		background_color: "#cccccc",
 		custom_icon_data: "{}",
 		center_vertically: "true",

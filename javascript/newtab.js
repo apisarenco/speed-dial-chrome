@@ -74,20 +74,22 @@ function setDialStyles() {
 	var borderWidth = 14;
 	var minEntryWidth = 120 - borderWidth;
 	var entryWidth = (adjustedDialWidth / dialColumns) - borderWidth;
+	var aspectRatioInv = parseFloat(localStorage.getItem("aspect_ratio_v")) / parseFloat(localStorage.getItem("aspect_ratio_h"));
+	var entryHeight = entryWidth * aspectRatioInv;
 
 	if (entryWidth < minEntryWidth) {
 		entryWidth = minEntryWidth;
 	}
 
 	// Set the values through CSS, rather than explicit individual CSS styles
-	// Height values are 3/4 or * 0.75 width values
+	// Height values are dictated by the aspectRatioInv
 	$("#styles").html(
 		"#dial { width:" + (adjustedDialWidth | 0) + "px; } " +
-		".entry { height:" + (entryWidth * 0.75 | 0) + "px; width:" + (entryWidth | 0) + "px; } " +
+		".entry { height:" + ((entryHeight | 0) + 20) + "px; width:" + (entryWidth | 0) + "px; } " +
 		"td.title { max-width:" + (entryWidth - 50 | 0) + "px; } " +
-		".image { height:" + ((entryWidth * 0.75) - 20 | 0) + "px; } " +
-		".foundicon-folder { font-size:" + (entryWidth * 0.5 | 0) + "px; top:" + (entryWidth * 0.05 | 0) + "px; color:" + folderColor + " } " +
-		".foundicon-plus { font-size:" + (entryWidth * 0.3 | 0) + "px; top:" + (entryWidth * 0.18 | 0) + "px; } "
+		".image { height:" + ((entryHeight) | 0) + "px; } " +
+		".foundicon-folder { font-size:" + (entryHeight * 0.67 | 0) + "px; top:" + (entryHeight * 0.067 | 0) + "px; color:" + folderColor + " } " +
+		".foundicon-plus { font-size:" + (entryHeight * 0.4 | 0) + "px; top:" + (entryHeight * 0.33 | 0) + "px; } "
 	);
 }
 
