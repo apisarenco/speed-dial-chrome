@@ -13,6 +13,7 @@ function restoreOptions() {
 	$("#folder_color").prop("value", localStorage.getItem("folder_color"));
 	$("#force_http").prop("checked", localStorage.getItem("force_http") === "true");
 	$("#show_advanced").prop("checked", localStorage.getItem("show_advanced") === "true");
+	$("#show_breadcrumbs").prop("checked", localStorage.getItem("show_breadcrumbs") === "true");
 	$("#show_folder_list").prop("checked", localStorage.getItem("show_folder_list") === "true");
 	$("#show_new_entry").prop("checked", localStorage.getItem("show_new_entry") === "true");
 	$("#show_options_gear").prop("checked", localStorage.getItem("show_options_gear") === "true");
@@ -35,6 +36,7 @@ function saveOptions() {
 	localStorage.setItem("folder_color", $("#folder_color").prop("value"));
 	localStorage.setItem("force_http", $("#force_http").prop("checked"));
 	localStorage.setItem("show_advanced", $("#show_advanced").prop("checked"));
+	localStorage.setItem("show_breadcrumbs", $("#show_breadcrumbs").prop("checked"));
 	localStorage.setItem("show_folder_list", $("#show_folder_list").prop("checked"));
 	localStorage.setItem("show_new_entry", $("#show_new_entry").prop("checked"));
 	localStorage.setItem("show_options_gear", $("#show_options_gear").prop("checked"));

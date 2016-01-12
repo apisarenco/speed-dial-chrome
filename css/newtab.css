@@ -9,7 +9,7 @@ body {
 	text-align: center;
 }
 
-#dial {
+.innerBlock {
 	display: inline-block;
 }
 
@@ -142,4 +142,46 @@ td {
 	margin: 20px auto 10px auto;
 	min-width: 20em;
 	max-width: 30%;
+}
+
+#breadcrumbs > div {
+	float: left;
+	padding: 0 0.5em;
+}
+
+#breadcrumbs > div > * {
+	display: inline-block;
+	padding: 0.5em 0.7em;
+}
+
+#breadcrumbs > div > a {
+	color: inherit;
+	font-weight: bold;
+	text-decoration: none;
+	transition: background 0.3s, box-shadow 0.3s;
+}
+
+#breadcrumbs > div > a:hover {
+	background: rgba(0,0,0,0.1);
+	box-shadow: 0 0 5px rgba(0,0,0, 0.1);
+}
+
+#breadcrumbs > div > a:first-child {
+	vertical-align: sub;
+}
+
+#breadcrumbs > div > a:last-child {
+	cursor: default;
+	font-weight: inherit;
+}
+
+#breadcrumbs > div > a:last-child:hover {
+	background: none;
+	box-shadow: 0;
+}
+
+#breadcrumbs > div > span {
+	cursor: default;
+	padding-left: 0;
+	padding-right: 0;
 }

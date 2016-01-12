@@ -84,12 +84,12 @@ function setDialStyles() {
 	// Set the values through CSS, rather than explicit individual CSS styles
 	// Height values are dictated by the aspectRatioInv
 	$("#styles").html(
-		"#dial { width:" + (adjustedDialWidth | 0) + "px; } " +
+		".innerBlock { width:" + (adjustedDialWidth | 0) + "px; } " +
 		".entry { height:" + ((entryHeight | 0) + 20) + "px; width:" + (entryWidth | 0) + "px; } " +
 		"td.title { max-width:" + (entryWidth - 50 | 0) + "px; } " +
 		".image { height:" + ((entryHeight) | 0) + "px; } " +
-		".foundicon-folder { font-size:" + (entryHeight * 0.67 | 0) + "px; top:" + (entryHeight * 0.067 | 0) + "px; color:" + folderColor + " } " +
-		".foundicon-plus { font-size:" + (entryHeight * 0.4 | 0) + "px; top:" + (entryHeight * 0.33 | 0) + "px; } "
+		".entry .foundicon-folder { font-size:" + (entryHeight * 0.67 | 0) + "px; top:" + (entryHeight * 0.067 | 0) + "px; color:" + folderColor + " } " +
+		".entry .foundicon-plus { font-size:" + (entryHeight * 0.4 | 0) + "px; top:" + (entryHeight * 0.33 | 0) + "px; } "
 	);
 }
 
@@ -131,6 +131,8 @@ function createSpeedDial(folderId) {
 			});
 		}
 	});
+
+	generateBreadcrumbs();
 }
 
 function getThumbnailUrl(bookmark) {
@@ -195,11 +197,15 @@ function updateCustomIcon(url, old_url) {
 function alignVertical() {
 	if (localStorage.getItem("center_vertically") === "true") {
 		var dial = $("#dial");
+		var paddingTop = (window.innerHeight - dial.height()) / 2 | 0;
+
 		if (localStorage.getItem("show_folder_list") === "true") {
-			dial.css("padding-top", ((window.innerHeight - dial.height()) / 2) - 50 | 0);
-		} else {
-			dial.css("padding-top", (window.innerHeight - dial.height()) / 2 | 0);
+			paddingTop-=50;
 		}
+		if (localStorage.getItem("show-breadcrumbs") === "true") {
+			paddingTop-=20;
+		}
+		dial.css("padding-top", paddingTop);
 	}
 }
 

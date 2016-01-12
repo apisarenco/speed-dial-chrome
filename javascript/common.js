@@ -1,3 +1,25 @@
+var indexedFolders = null;
+function getIndexedFolders(callback) {
+	function writeIndexedFolders(node) {
+		indexedFolders[node.id] = node;
+		if(node.children instanceof Array) {
+			for(var i=0;i<node.children.length;i++) {
+				writeIndexedFolders(node.children[i]);
+			}
+		}
+	}
+	if(indexedFolders===null) {
+		indexedFolders = {};
+		chrome.bookmarks.getTree(function(rootNode) {
+			writeIndexedFolders(rootNode[0]);
+			callback(indexedFolders);
+		});
+	}
+	else {
+		callback(indexedFolders);
+	}
+}
+
 // Generates a list of all folders under chrome bookmarks
 function generateFolderList() {
 	if (localStorage.getItem("show_folder_list") === "true" || window.location.pathname === "/options.html") {
@@ -41,6 +63,30 @@ function generateFolderList() {
 	}
 }
 
+function generateBreadcrumbs() {
+	if (localStorage.getItem("show_breadcrumbs") === "true") {
+		getIndexedFolders(function(folders) {
+			var startingFolderId = getStartingFolder();
+			var breadcrumbs = [];
+			var currentFolder = folders[startingFolderId];
+			breadcrumbs.push(currentFolder);
+			while(currentFolder.parentId!==undefined) {
+				currentFolder = folders[currentFolder.parentId];
+				breadcrumbs.push(currentFolder);
+			}
+
+			var $breadcrumbs = $("<div></div>");
+			//root element
+			var item = breadcrumbs.pop();
+			$breadcrumbs.append('<a href="#' + item.id + '"><span class="foundicon-folder"></span></a>');
+			while((item = breadcrumbs.pop())!==undefined) {
+				$breadcrumbs.append('<span>&gt;</span><a href="#' + item.id + '">' + item.title + '</a>');
+			}
+			$("#breadcrumbs").empty().append($breadcrumbs);
+		});
+	}
+}
+
 function getStartingFolder() {
 	var folderId = localStorage.getItem("default_folder_id");
 	// Allow the url to specify the folder as well
@@ -66,6 +112,7 @@ function createDefaults() {
 		folder_color: "#888888",
 		force_http: "true",
 		show_advanced: "false",
+		show_breadcrumbs: "true",
 		show_folder_list: "true",
 		show_new_entry: "true",
 		show_options_gear: "true",
