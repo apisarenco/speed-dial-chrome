@@ -177,7 +177,7 @@ td {
 
 #breadcrumbs > div > a:last-child:hover {
 	background: none;
-	box-shadow: 0;
+	box-shadow: none;
 }
 
 #breadcrumbs > div > span {
